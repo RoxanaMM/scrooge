@@ -1,10 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import {Box, Typography} from '@mui/material';
 import SearchBar from './SearchBar';
-import {Product} from "../product/ProductCard";
 import apiClient from "../api";
 import ProductGrid from "../product/ProductGrid";
-import ShoppingList from "../list/ShoppingList";
+import {Product} from "../model/Models";
 
 const ItemBrowser: React.FC = () => {
     const [data, setData] = useState<Product[] | null>(null);
@@ -34,7 +33,7 @@ const ItemBrowser: React.FC = () => {
             <Typography variant="h3" gutterBottom align="center">
                 The Nickel Squeezer App
             </Typography>
-            <ShoppingList />
+
             <SearchBar searchTerm={searchTerm} onSearchChange={handleSearchChange}/>
             <ProductGrid products={filteredData}/>
         </Box>

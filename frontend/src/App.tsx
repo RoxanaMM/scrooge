@@ -1,15 +1,11 @@
 import React from 'react';
-import './App.css';
-import ItemBrowser from "./search/ItemBrowser";
+import { BrowserRouter } from 'react-router-dom';
+import RoutesComponent from './Routes';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <ItemBrowser />
-      </header>
-    </div>
-  );
-}
+const App: React.FC = () => (
+    <BrowserRouter>
+        <RoutesComponent />
+    </BrowserRouter>
+);
 
 export default App;

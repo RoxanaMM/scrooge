@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
     Box,
     Card,
@@ -15,19 +15,30 @@ import {
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 
-const ShoppingList: React.FC = () => {
+interface ShoppingListProps {
+    lists: { name: string; items: string[] }[];
+    setLists: React.Dispatch<React.SetStateAction<{ name: string; items: string[] }[]>>;
+}
+
+const ShoppingList: React.FC<ShoppingListProps> = ({ lists, setLists }) => {
     const [item, setItem] = useState('');
-    const [items, setItems] = useState<string[]>([]);
+    const [selectedList, setSelectedList] = useState<number | null>(null); // Track the selected list index
 
     const addItem = () => {
-        if (item.trim()) {
-            setItems([...items, item.trim()]);
+        if (item.trim() && selectedList !== null) {
+            const updatedLists = [...lists];
+            updatedLists[selectedList].items.push(item.trim());
+            setLists(updatedLists);
             setItem('');
         }
     };
 
     const removeItem = (index: number) => {
-        setItems(items.filter((_, i) => i !== index));
+        if (selectedList !== null) {
+            const updatedLists = [...lists];
+            updatedLists[selectedList].items = updatedLists[selectedList].items.filter((_, i) => i !== index);
+            setLists(updatedLists);
+        }
     };
 
     const handleKeyPress = (event: React.KeyboardEvent) => {
@@ -37,14 +48,7 @@ const ShoppingList: React.FC = () => {
     };
 
     return (
-        <Box
-            sx={{
-                maxWidth: 500,
-                margin: 'auto',
-                mt: 8,
-                p: 3,
-            }}
-        >
+        <Box sx={{ maxWidth: 500, margin: 'auto', mt: 8, p: 3 }}>
             <Card
                 sx={{
                     borderRadius: '16px',
@@ -53,10 +57,7 @@ const ShoppingList: React.FC = () => {
                 }}
             >
                 <CardContent>
-                    <Typography
-                        variant="h4"
-                        sx={{ mb: 2, textAlign: 'center', color: 'primary.main', fontWeight: 'bold' }}
-                    >
+                    <Typography variant="h4" sx={{ mb: 2, textAlign: 'center', color: 'primary.main', fontWeight: 'bold' }}>
                         Shopping List
                     </Typography>
                     <Box display="flex" gap={2} sx={{ mb: 3 }}>
@@ -69,51 +70,47 @@ const ShoppingList: React.FC = () => {
                             variant="outlined"
                             size="small"
                         />
-                        <Fab
-                            color="primary"
-                            aria-label="add"
-                            onClick={addItem}
-                            size="medium"
-                        >
+                        <Fab color="primary" aria-label="add" onClick={addItem} size="medium">
                             <AddIcon />
                         </Fab>
                     </Box>
                     <List>
-                        {items.map((item, index) => (
-                            <ListItem
-                                key={index}
-                                sx={{
-                                    bgcolor: 'background.paper',
-                                    borderRadius: '8px',
-                                    mb: 1,
-                                    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-                                    transition: 'all 0.3s ease',
-                                    '&:hover': {
-                                        transform: 'scale(1.02)',
-                                        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
-                                    },
-                                }}
-                            >
-                                <ListItemText
-                                    primary={item}
-                                    primaryTypographyProps={{
-                                        sx: { fontWeight: '500', color: 'text.primary' },
+                        {selectedList !== null &&
+                            lists[selectedList].items.map((item, index) => (
+                                <ListItem
+                                    key={index}
+                                    sx={{
+                                        bgcolor: 'background.paper',
+                                        borderRadius: '8px',
+                                        mb: 1,
+                                        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                                        transition: 'all 0.3s ease',
+                                        '&:hover': {
+                                            transform: 'scale(1.02)',
+                                            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+                                        },
                                     }}
-                                />
-                                <ListItemSecondaryAction>
-                                    <IconButton
-                                        edge="end"
-                                        onClick={() => removeItem(index)}
-                                        sx={{
-                                            color: 'error.main',
-                                            '&:hover': { color: 'error.dark' },
+                                >
+                                    <ListItemText
+                                        primary={item}
+                                        primaryTypographyProps={{
+                                            sx: { fontWeight: '500', color: 'text.primary' },
                                         }}
-                                    >
-                                        <DeleteIcon />
-                                    </IconButton>
-                                </ListItemSecondaryAction>
-                            </ListItem>
-                        ))}
+                                    />
+                                    <ListItemSecondaryAction>
+                                        <IconButton
+                                            edge="end"
+                                            onClick={() => removeItem(index)}
+                                            sx={{
+                                                color: 'error.main',
+                                                '&:hover': { color: 'error.dark' },
+                                            }}
+                                        >
+                                            <DeleteIcon />
+                                        </IconButton>
+                                    </ListItemSecondaryAction>
+                                </ListItem>
+                            ))}
                     </List>
                 </CardContent>
             </Card>

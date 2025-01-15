@@ -1,6 +1,7 @@
 import React from 'react';
 import {Grid, Grid2, Typography} from '@mui/material';
-import ProductCard, {Product} from './ProductCard';
+import ProductCard from './ProductCard';
+import {Product} from "../model/Models";
 
 interface ProductGridProps {
     products: Product[];
