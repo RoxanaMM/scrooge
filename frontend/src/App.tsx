@@ -1,15 +1,17 @@
 import React from 'react';
-import './App.css';
-import MyComponent from "./MyComponent";
+import {BrowserRouter} from 'react-router-dom';
+import RoutesComponent from "./menu/Routes";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <MyComponent />
-      </header>
-    </div>
-  );
-}
+import {CssBaseline, ThemeProvider} from '@mui/material';
+import theme from "./theme";
+
+const App: React.FC = () => (
+    <ThemeProvider theme={theme}>
+        <CssBaseline/>
+        <BrowserRouter>
+            <RoutesComponent/>
+        </BrowserRouter>
+    </ThemeProvider>
+);
 
 export default App;
