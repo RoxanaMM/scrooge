@@ -4,3 +4,8 @@ export interface Product {
     price: string;
     url: string;
 }
+
+export interface ShoppingListModel {
+    name: string;
+    items: string[];
+}

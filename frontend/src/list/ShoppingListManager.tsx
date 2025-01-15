@@ -1,54 +1,87 @@
 import React, { useState } from 'react';
-import { Box, TextField, Button, List, ListItem, IconButton, Typography } from '@mui/material';
+import {
+    Box,
+    Button,
+    IconButton,
+    List,
+    ListItem,
+    TextField,
+    Typography,
+} from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { ShoppingListModel } from '../model/Models';
+import ShoppingList from './ShoppingList';
 
 interface ShoppingListManagerProps {
-    lists: { name: string; items: string[] }[];
-    setLists: React.Dispatch<React.SetStateAction<{ name: string; items: string[] }[]>>;
+    shoppingLists: ShoppingListModel[];
+    setShoppingLists: React.Dispatch<React.SetStateAction<ShoppingListModel[]>>;
 }
 
-const ShoppingListManager: React.FC<ShoppingListManagerProps> = ({ lists, setLists }) => {
-    const [newListName, setNewListName] = useState<string>('');
+const ShoppingListManager: React.FC<ShoppingListManagerProps> = ({ shoppingLists, setShoppingLists }) => {
+    const [newListName, setNewListName] = useState('');
+    const [selectedList, setSelectedList] = useState<ShoppingListModel | null>(null);
 
-    const handleAddList = () => {
-        if (newListName.trim() !== '') {
-            setLists([...lists, { name: newListName, items: [] }]);
-            setNewListName('');
+    const addShoppingList = () => {
+        if (newListName.trim()) {
+            setShoppingLists([...shoppingLists, { name: newListName, items: [] }]);
+            setNewListName(''); // Clear the input after adding the list
         }
     };
 
-    const handleDeleteList = (index: number) => {
-        setLists(lists.filter((_, i) => i !== index));
+    const handleDeleteList = (name: string) => {
+        setShoppingLists(shoppingLists.filter((list) => list.name !== name));
     };
 
     return (
-        <Box>
-            <Typography variant="h5" gutterBottom>
-                Manage Your Shopping Lists
-            </Typography>
-            <Box sx={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
-                <TextField
-                    label="New List Name"
-                    variant="outlined"
-                    value={newListName}
-                    onChange={(e) => setNewListName(e.target.value)}
-                    fullWidth
+        <Box sx={{ maxWidth: 600, margin: 'auto', mt: 4 }}>
+            {!selectedList ? (
+                <>
+                    <Typography variant="h4" gutterBottom>
+                        Shopping List Manager
+                    </Typography>
+                    <Box sx={{ display: 'flex', gap: 2, mb: 4 }}>
+                        <TextField
+                            label="New Shopping List"
+                            variant="outlined"
+                            value={newListName}
+                            onChange={(e) => setNewListName(e.target.value)}
+                            onKeyDown={(e) => e.key === 'Enter' && addShoppingList()}
+                            fullWidth
+                        />
+                        <Button variant="contained" onClick={addShoppingList}>
+                            Add List
+                        </Button>
+                    </Box>
+                    <List>
+                        {shoppingLists.map((list, index) => (
+                            <ListItem
+                                key={index}
+                                sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}
+                                onClick={() => setSelectedList(list)} // Set selected list on click
+                                style={{ cursor: 'pointer' }}
+                            >
+                                <Typography variant="body1">{list.name}</Typography>
+                                <IconButton edge="end" onClick={(e) => {
+                                    e.stopPropagation(); // Prevent triggering list selection
+                                    handleDeleteList(list.name);
+                                }}>
+                                    <DeleteIcon />
+                                </IconButton>
+                            </ListItem>
+                        ))}
+                    </List>
+                </>
+            ) : (
+                <ShoppingList
+                    list={selectedList}
+                    setLists={setShoppingLists}
                 />
-                <Button variant="contained" onClick={handleAddList}>
-                    Add
+            )}
+            {selectedList && (
+                <Button sx={{ mt: 2 }} variant="outlined" onClick={() => setSelectedList(null)}>
+                    Back to Lists
                 </Button>
-            </Box>
-            <List>
-                {lists.map((list, index) => (
-                    <ListItem key={index} secondaryAction={
-                        <IconButton edge="end" onClick={() => handleDeleteList(index)}>
-                            <DeleteIcon />
-                        </IconButton>
-                    }>
-                        <Typography>{list.name}</Typography>
-                    </ListItem>
-                ))}
-            </List>
+            )}
         </Box>
     );
 };

@@ -5,8 +5,7 @@ import { Drawer } from '@mui/material';
 
 const menuItems = [
     {label: 'Home', path: '/'},
-    {label: 'Create/Manage Lists', path: '/create-list'},
-    {label: 'View Shopping List', path: '/shopping-list'},
+    {label: 'Your lists', path: '/shopping-list'},
     {label: 'Cheapest products', path: '/view-cheapest'},
 ];
 

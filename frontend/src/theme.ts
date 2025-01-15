@@ -1,19 +1,23 @@
-import {red} from "@mui/material/colors";
-import {createTheme} from "@mui/system";
+import { createTheme } from '@mui/material';
 
-const theme = createTheme({
+export const theme = createTheme({
     palette: {
         primary: {
-            main: '#556cd6',
+            main: '#1976d2',
         },
         secondary: {
-            main: '#19857b',
+            main: '#ff4081',
         },
-        error: {
-            main: red.A400,
+    },
+    typography: {
+        fontFamily: "'Roboto', 'Arial', sans-serif",
+        h4: {
+            fontWeight: 700,  // Ensure you're using valid font weights (normal, bold, etc.)
+            fontSize: '2.5rem',
         },
-        background: {
-            default: '#fff',
+        h6: {
+            fontWeight: 600, // Same here
+            fontSize: '1.5rem',
         },
     },
 });
