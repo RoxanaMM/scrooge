@@ -1,12 +1,12 @@
 import React from 'react';
 import './App.css';
-import MyComponent from "./MyComponent";
+import ItemBrowser from "./search/ItemBrowser";
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <MyComponent />
+        <ItemBrowser />
       </header>
     </div>
   );
